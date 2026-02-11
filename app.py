@@ -301,14 +301,17 @@ if analyze:
             churn_class = "churn-low"
             churn_status = "Low"
             churn_desc = "This customer is likely to stay"
+            churn_action = "Keep up the good work — continue with loyalty rewards and engagement"
         elif churn_prob < 60:
             churn_class = "churn-medium"
             churn_status = "Medium"
             churn_desc = "Some risk of leaving, monitor closely"
+            churn_action = "Send a personalized offer or check-in to re-engage this customer"
         else:
             churn_class = "churn-high"
             churn_status = "High"
             churn_desc = "May leave soon without intervention"
+            churn_action = "Immediate action needed — reach out with a special discount or win-back campaign"
         
         st.markdown('<p class="section-title">📊 Customer Segment — KMeans Clustering</p>', unsafe_allow_html=True)
         st.markdown(f'<span class="segment-badge badge-{segment_info["class"]}">{segment_info["name"]}</span>', unsafe_allow_html=True)
@@ -318,3 +321,4 @@ if analyze:
         st.markdown('<p class="section-title">⚠️ Churn Risk Prediction — XGBoost</p>', unsafe_allow_html=True)
         st.markdown(f'<p class="churn-value {churn_class}">{churn_prob:.0f}% — {churn_status}</p>', unsafe_allow_html=True)
         st.markdown(f'<p class="churn-description">"{churn_desc}"</p>', unsafe_allow_html=True)
+        st.markdown(f'''<div class="action-box"><p class="action-label">💡 Recommended Action</p><p class="action-text">{churn_action}</p></div>''', unsafe_allow_html=True)
