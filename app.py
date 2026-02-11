@@ -210,23 +210,13 @@ segment_model, churn_model, scaler = load_models()
 
 
 SEGMENT_INFO = {
-    0: {"name": "Churned Lapsed", "class": "lost", "desc": "Long inactive (303 days avg), needs re-engagement"},
-    1: {"name": "Power Buyers", "class": "champion", "desc": "High frequency (15 orders avg), long tenure (520 days)"},
-    2: {"name": "Loyal Active", "class": "champion", "desc": "Very recent buyer (7 days avg), actively engaged"},
-    3: {"name": "Lapsed Churned", "class": "lost", "desc": "Long inactive (304 days avg), needs win-back"},
-    4: {"name": "Champions", "class": "champion", "desc": "Very recent (7 days avg), highly active - your best customers!"},
-    5: {"name": "Active Regulars", "class": "loyal", "desc": "Very recent (7 days avg), consistent buying pattern"},
-    6: {"name": "High-Value Rare", "class": "at-risk", "desc": "Big spender ($2774 avg) but infrequent (3 orders avg)"}
-}
-
-ACTIONS = {
-    0: "Consider win-back campaign with significant incentive or sunset gracefully",
-    1: "Celebrate! Maintain with VIP treatment, loyalty rewards, and recognition",
-    2: "Continue engagement with loyalty rewards - they're active and engaged!",
-    3: "Aggressive win-back campaign with compelling offer",
-    4: "Celebrate! Maintain relationship with VIP treatment and recognition",
-    5: "Keep engaged with personalized recommendations and rewards",
-    6: "Nurture with VIP treatment - high spender, worth the investment to retain"
+    0: {"name": "Inactive Customer", "class": "lost"},
+    1: {"name": "Frequent Shopper", "class": "champion"},
+    2: {"name": "Active Customer", "class": "champion"},
+    3: {"name": "Lost Customer", "class": "lost"},
+    4: {"name": "Top Customer", "class": "champion"},
+    5: {"name": "Regular Buyer", "class": "loyal"},
+    6: {"name": "Big Spender", "class": "at-risk"}
 }
 
 
@@ -305,7 +295,7 @@ if analyze:
 
         
         segment_pred = segment_model.predict(segment_input)[0]
-        segment_info = SEGMENT_INFO.get(segment_pred, {"name": "Unknown", "class": "lost", "desc": "Unable to classify"})
+        segment_info = SEGMENT_INFO.get(segment_pred, {"name": "Unknown", "class": "lost"})
         
         if churn_prob < 30:
             churn_class = "churn-low"
@@ -320,11 +310,8 @@ if analyze:
             churn_status = "High"
             churn_desc = "May leave soon without intervention"
         
-        action = ACTIONS.get(segment_pred, "Monitor customer behavior and engage appropriately")
-        
         st.markdown('<p class="section-title">📊 Customer Segment — KMeans Clustering</p>', unsafe_allow_html=True)
         st.markdown(f'<span class="segment-badge badge-{segment_info["class"]}">{segment_info["name"]}</span>', unsafe_allow_html=True)
-        st.markdown(f'''<div class="action-box"><p class="action-label">💡 Recommended Action</p><p class="action-text">{action}</p></div>''', unsafe_allow_html=True)
         
         st.markdown("<hr style='margin: 2rem 0; border: none; border-top: 1px solid #E5E7EB;'>", unsafe_allow_html=True)
         
